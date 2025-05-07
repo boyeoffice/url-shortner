@@ -1,0 +1,15 @@
+{
+  "name": "url-shortner",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "url-shortner"
+  ],
+  "license": "ISC",
+  "author": "Olakunle Boye",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  }
+}
