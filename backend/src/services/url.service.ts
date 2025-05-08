@@ -32,3 +32,39 @@ export function createShortUrl(originalUrl: string): string {
 
   return `${domain}/${code}`;
 }
+
+export function getOriginalUrl(code: string): string | null {
+  const entry = urlDatabase.get(code);
+  return entry ? entry.originalUrl : null;
+}
+
+export function incrementVisitCount(code: string): void {
+  const entry = urlDatabase.get(code);
+  if (entry) {
+    entry.visits += 1;
+  }
+}
+
+export function getAllUrls(): {
+  shortUrl: string;
+  originalUrl: string;
+  createdAt: Date;
+  visits: number;
+}[] {
+  return Array.from(urlDatabase.entries()).map(([code, data]) => ({
+    shortUrl: `${domain}/${code}`,
+    ...data,
+  }));
+}
+
+export function getUrlStats(code: string): Record<string, unknown> | null {
+  const entry = urlDatabase.get(code);
+  if (!entry) return null;
+
+  return {
+    shortUrl: `${domain}/${code}`,
+    originalUrl: entry.originalUrl,
+    visits: entry.visits,
+    createdAt: entry.createdAt,
+  };
+}
