@@ -20,9 +20,13 @@ const UrlList: React.FC<Props> = ({ search, refresh }) => {
     axios.get('/api/list').then((res) => setUrls(res.data)).catch(console.error);
   }, [refresh]);
 
-  const filtered = urls.filter((u) =>
-    u.originalUrl.toLowerCase().includes(search.toLowerCase())
-  );
+  // const filtered = urls.filter((u) =>
+  //   u.originalUrl.toLowerCase().includes(search.toLowerCase())
+  // );
+
+  const filtered = Array.isArray(urls)
+    ? urls.filter(u => u.originalUrl.toLowerCase().includes(search.toLowerCase()))
+    : [];
 
   return (
     <div className="card">
