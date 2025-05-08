@@ -1,54 +1,49 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './ShortUrlForm.css';
 
-const ShortUrlForm: React.FC = () => {
+interface Props {
+  onNewUrl: () => void;
+}
+
+const ShortUrlForm: React.FC<Props> = ({ onNewUrl }) => {
   const [longUrl, setLongUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setShortUrl('');
     setLoading(true);
 
     try {
-      const res = await axios.post('https://localhost:6000/api/encode', { url: longUrl });
+      const res = await axios.post('/api/encode', { url: longUrl });
       setShortUrl(res.data.shortUrl);
+      setLongUrl('');
+      onNewUrl(); // Refresh list
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Something went wrong');
+      setError(err.response?.data?.message || 'An error occurred');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="shortener-container">
-      <h2>Shorten Your URL</h2>
+    <div className="card">
+      <h2>Shorten a URL</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="url"
-          placeholder="Enter a long URL (e.g. https://example.com)"
           value={longUrl}
           onChange={(e) => setLongUrl(e.target.value)}
+          placeholder="https://example.com"
           required
         />
         <button type="submit" disabled={loading}>
-          {loading ? 'Shortening...' : 'Shorten URL'}
+          {loading ? 'Processing...' : 'Shorten'}
         </button>
       </form>
-
-      {shortUrl && (
-        <div className="result">
-          Short URL:{' '}
-          <a href={shortUrl} target="_blank" rel="noopener noreferrer">
-            {shortUrl}
-          </a>
-        </div>
-      )}
-
+      {shortUrl && <div className="success">Short URL: <a href={shortUrl} target="_blank">{shortUrl}</a></div>}
       {error && <div className="error">{error}</div>}
     </div>
   );

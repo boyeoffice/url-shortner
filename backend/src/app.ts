@@ -1,9 +1,11 @@
 import express, { Request, Response } from 'express';
+import cors from 'cors';
 import urlRoutes from './routes';
 import { getOriginalUrl, incrementVisitCount } from './services/url.service';
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 // API routes
